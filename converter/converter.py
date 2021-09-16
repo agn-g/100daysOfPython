@@ -5,14 +5,27 @@ from enum import Enum
 
 
 class Format(Enum):
-    Celsius = 1
-    Fahrenheit = 2
+    Celsius = 'C'
+    Fahrenheit = 'F'
+
+
+def from_string(s):
+    try:
+        return Format[s.capitalize()]
+    except KeyError:
+        raise ValueError()
 
 
 def arguments(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--value', type=int, default=0,
                         help="""Defines value that will be converted""")
+    parser.add_argument('-if', '--input_format', type=from_string, choices=list(Format),
+                        required=True,
+                        help="""Defines type of input""")
+    parser.add_argument('-of', '--output_format', type=from_string, choices=list(Format),
+                        required=True,
+                        help="""Defines type of output""")
     return parser.parse_args(args)
 
 
@@ -27,8 +40,10 @@ def convert(input_format, output_format, value):
 
 def main(def_args=sys.argv[1:]):
     args = arguments(def_args)
-    print(f"{args.value}*C equals to {convert(Format.Celsius, Format.Fahrenheit, args.value)}*F")
-    print(f"{args.value}*F equals to {convert(Format.Fahrenheit, Format.Celsius, args.value)}*C")
+
+    print(
+        f"{args.value}*{args.input_format.value} equals to "
+        f"{convert(args.input_format, args.output_format, args.value)}*{args.output_format.value}")
 
 
 main()
