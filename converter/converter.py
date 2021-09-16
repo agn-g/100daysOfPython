@@ -8,10 +8,17 @@ class Format(Enum):
     Celsius = 'C'
     Fahrenheit = 'F'
 
+    @classmethod
+    def has_value(cls, value):
+        return value in cls._value2member_map_
+
 
 def from_string(s):
     try:
-        return Format[s.capitalize()]
+        if Format.has_value(s):
+            return Format(s)
+        else:
+            return Format[s.capitalize()]
     except KeyError:
         raise ValueError()
 
