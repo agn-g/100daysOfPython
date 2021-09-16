@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+import argparse
+import sys
+
+
+def arguments(args):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-v', '--value', type=int, default=0,
+                        help="""Defines value that will be converted""")
+    return parser.parse_args(args)
+
 
 def convert(input_format, output_format, value):
     if input_format == output_format:
@@ -9,10 +19,10 @@ def convert(input_format, output_format, value):
         return (value - 32) * 0.5556
 
 
-celsius = int(input('Enter temperature in Celsius: '))
-fahrenheit = convert('C', 'F', celsius)
-print(f'{celsius}*C equals to {fahrenheit}*F')
+def main(def_args=sys.argv[1:]):
+    args = arguments(def_args)
+    print(f"{args.value}*C equals to {convert('C', 'F', args.value)}*F")
+    print(f"{args.value}*F equals to {convert('F', 'C', args.value)}*C")
 
-fahrenheit = int(input('Enter temperature in Fahrenheit: '))
-celsius = convert('F', 'C', fahrenheit)
-print(f'{fahrenheit}*C equals to {celsius}*F')
+
+main()
