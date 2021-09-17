@@ -7,6 +7,8 @@ from enum import Enum
 class Format(Enum):
     Celsius = 'C'
     Fahrenheit = 'F'
+    Kilometer = 'km'
+    Mile = 'mi'
 
     @classmethod
     def has_value(cls, value):
@@ -41,8 +43,12 @@ def convert(input_format, output_format, value):
         return value
     if input_format == Format.Celsius:
         return value * 1.8 + 32
-    else:
+    elif input_format == Format.Fahrenheit:
         return (value - 32) * 0.5556
+    elif input_format == Format.Kilometer:
+        return value * 0.6214
+    else:
+        return value / 0.6214
 
 
 def main(def_args=sys.argv[1:]):
