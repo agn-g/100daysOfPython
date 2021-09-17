@@ -50,13 +50,18 @@ def convert(input_format, output_format, value):
     else:
         return value / 0.6214
 
+def get_unit(format_val):
+    return f'{format_val.value}' \
+        if format_val != Format.Celsius and format_val != Format.Fahrenheit \
+        else f'*{format_val.value}'
+
 
 def main(def_args=sys.argv[1:]):
     args = arguments(def_args)
 
     print(
-        f"{args.value}*{args.input_format.value} equals to "
-        f"{convert(args.input_format, args.output_format, args.value)}*{args.output_format.value}")
+        f"{args.value} {get_unit(args.input_format)} equals to "
+        f"{convert(args.input_format, args.output_format, args.value)} {get_unit(args.output_format)}")
 
 
 main()
