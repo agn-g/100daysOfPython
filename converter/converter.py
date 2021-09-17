@@ -25,6 +25,20 @@ def from_string(s):
         raise ValueError()
 
 
+allowed_conversions: list[tuple[Format, Format]] = [(Format.Celsius, Format.Fahrenheit),
+                                                    (Format.Mile, Format.Kilometer)]
+
+
+def is_allowed_conversion(input_type, output_type):
+    conversion = next(((type1, type2) for (type1, type2) in allowed_conversions
+                       if (type1 == input_type and type2 == output_type) or
+                       (type1 == output_type and type2 == input_type)), None)
+    if conversion is None:
+        return False
+    else:
+        return True
+
+
 def arguments(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--value', type=int, default=0,
@@ -50,6 +64,7 @@ def convert(input_format, output_format, value):
     else:
         return value / 0.6214
 
+
 def get_unit(format_val):
     return f'{format_val.value}' \
         if format_val != Format.Celsius and format_val != Format.Fahrenheit \
@@ -59,9 +74,12 @@ def get_unit(format_val):
 def main(def_args=sys.argv[1:]):
     args = arguments(def_args)
 
-    print(
-        f"{args.value} {get_unit(args.input_format)} equals to "
-        f"{convert(args.input_format, args.output_format, args.value)} {get_unit(args.output_format)}")
+    if args.input_format == args.output_format or is_allowed_conversion(args.input_format, args.output_format):
+        print(
+            f"{args.value} {get_unit(args.input_format)} equals to "
+            f"{convert(args.input_format, args.output_format, args.value)} {get_unit(args.output_format)}")
+    else:
+        print("Unsupported conversion")
 
 
 main()
