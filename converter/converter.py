@@ -8,7 +8,9 @@ class Format(Enum):
     Celsius = 'C'
     Fahrenheit = 'F'
     Kilometer = 'km'
-    Mile = 'mi'
+    Mile = 'mi',
+    Inch = 'in',
+    Centimeter = 'cm'
 
     @classmethod
     def has_value(cls, value):
@@ -26,7 +28,8 @@ def from_string(s):
 
 
 allowed_conversions: list[tuple[Format, Format]] = [(Format.Celsius, Format.Fahrenheit),
-                                                    (Format.Mile, Format.Kilometer)]
+                                                    (Format.Mile, Format.Kilometer),
+                                                    (Format.Inch, Format.Centimeter)]
 
 
 def is_allowed_conversion(input_type, output_type):
@@ -61,6 +64,10 @@ def convert(input_format, output_format, value):
         return (value - 32) * 0.5556
     elif input_format == Format.Kilometer:
         return value * 0.6214
+    elif input_format == Format.Centimeter:
+        return value * 0.3937
+    elif input_format == Format.Inch:
+        return value * 2.54
     else:
         return value / 0.6214
 
