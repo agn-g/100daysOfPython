@@ -5,26 +5,30 @@ from enum import Enum
 
 
 class Format(Enum):
-    Celsius = 'C'
-    Fahrenheit = 'F'
-    Kilometer = 'km'
+    Celsius = "C"
+    Fahrenheit = "F"
+    Kilometer = "km"
     Mile = 'mi',
-    Inch = 'in',
-    Centimeter = 'cm'
-
-    @classmethod
-    def has_value(cls, value):
-        return value in cls._value2member_map_
+    Inch = "in",
+    Centimeter = "cm"
 
 
 def from_string(s):
     try:
-        if Format.has_value(s):
-            return Format(s)
+        if s.lower() == "mi":
+            return Format.Mile
+        elif s.lower() == "in":
+            return Format.Inch
         else:
             return Format[s.capitalize()]
     except KeyError:
-        raise ValueError()
+        try:
+            return Format(s)
+        except ValueError:
+            try:
+                return Format(s.lower())
+            except ValueError:
+                raise ValueError()
 
 
 allowed_conversions: list[tuple[Format, Format]] = [(Format.Celsius, Format.Fahrenheit),
@@ -73,9 +77,15 @@ def convert(input_format, output_format, value):
 
 
 def get_unit(format_val):
-    return f'{format_val.value}' \
-        if format_val != Format.Celsius and format_val != Format.Fahrenheit \
-        else f'*{format_val.value}'
+    if format_val != Format.Celsius and format_val != Format.Fahrenheit:
+        if format_val == Format.Mile:
+            return 'mi'
+        elif format_val == Format.Inch:
+            return 'in'
+        else:
+            return f'{format_val.value}'
+    else:
+        return f"*{format_val.value}"
 
 
 def main(def_args=sys.argv[1:]):
